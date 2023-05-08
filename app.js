@@ -3,5 +3,5 @@
 window.addEventListener("load", initApp);
 
 function initApp() {
-  console.log("Delfinen svømmer!");
+  console.log("Delfinen svømmer og sutter pik!");
 }
