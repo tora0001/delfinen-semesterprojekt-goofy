@@ -82,6 +82,7 @@ function addMemberClicked() {
     <input type="button" id="btn-cancel" value="Luk">
     </form>
     `;
+
   document.querySelector("#add-member-form").innerHTML = newMemberForm;
 
   document.querySelector("#add-member-form").addEventListener("submit", prepareNewMember);
