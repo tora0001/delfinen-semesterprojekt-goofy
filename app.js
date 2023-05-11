@@ -7,26 +7,26 @@ const endpoint = "https://delfinen-36fde-default-rtdb.firebaseio.com/";
 function initApp() {
   console.log("Delfinen svømmer!");
   updatePostsGrid();
-  document.querySelector(".new-member-btn").addEventListener("click", addMemberClicked);
-
-
-
+  document
+    .querySelector(".new-member-btn")
+    .addEventListener("click", addMemberClicked);
 }
-async function updatePostsGrid() { // Updates the grid showing the list of members
+// Updates the grid showing the list of members
+async function updatePostsGrid() {
   const members = await getMembers();
   showMembers(members);
 }
 
-
-async function getMembers() { // fetches members from firebase
+// fetches members from firebase
+async function getMembers() {
   const response = await fetch(`${endpoint}/members.json`);
   const data = await response.json();
   const members = prepareMemberData(data);
-  prepareMemberData(data);
   return members;
 }
 
-function prepareMemberData(memberObject) { // prepares the member data and returns it as an array
+// prepares the member data and returns it as an array
+function prepareMemberData(memberObject) {
   const memberArray = [];
   for (const key in memberObject) {
     const member = memberObject[key];
@@ -37,7 +37,8 @@ function prepareMemberData(memberObject) { // prepares the member data and retur
   return memberArray;
 }
 
-function addMemberClicked() { // When Add member is clicked it opens form
+// When Add member is clicked it opens form
+function addMemberClicked() {
   document.querySelector("#add-member-form").showModal();
   const newMemberForm = /*html*/ `
     <form id="new-member-form" method="dialog">
@@ -93,16 +94,17 @@ function addMemberClicked() { // When Add member is clicked it opens form
 
   document.querySelector("#add-member-form").innerHTML = newMemberForm;
 
-  document.querySelector("#add-member-form").addEventListener("submit", prepareNewMember);
+  document
+    .querySelector("#add-member-form")
+    .addEventListener("submit", prepareNewMember);
 
   document.querySelector("#btn-cancel").addEventListener("click", () => {
     document.querySelector("#add-member-form").close();
   });
 }
 
-
-
-async function prepareNewMember() {  // Prepares all the data for creating a new member
+// Prepares all the data for creating a new member
+async function prepareNewMember() {
   const name = document.querySelector("#name").value;
   const age = document.querySelector("#age").value;
   const activity = document.querySelector("#activity").value;
@@ -110,27 +112,43 @@ async function prepareNewMember() {  // Prepares all the data for creating a new
   const disciplin = document.querySelector("#disciplin").value;
   const subscription = document.querySelector("#subscription").value;
 
-  console.log(name, age, activity, team, disciplin, subscription);
+  // console.log(name, age, activity, team, disciplin, subscription);
 
-  const respone = await submitNewMember(name, age, activity, team, disciplin, subscription);
-  if (respone.ok){
-  console.log("nyt medlem oprettet!");
-  updatePostsGrid();
+  const respone = await submitNewMember(
+    name,
+    age,
+    activity,
+    team,
+    disciplin,
+    subscription
+  );
+  if (respone.ok) {
+    console.log("nyt medlem oprettet!");
+    updatePostsGrid();
   }
 }
 
-
-async function submitNewMember(name, age, activity, team, disciplin, subscription){ // Takes the data received in prepareNewMember and puts it into firebase
+// Takes the data received in prepareNewMember and puts it into firebase
+async function submitNewMember(
+  name,
+  age,
+  activity,
+  team,
+  disciplin,
+  subscription
+) {
   console.log("Submitting new member");
-  const newMember = {name, age, activity, team, disciplin, subscription};
+  const newMember = { name, age, activity, team, disciplin, subscription };
   const postAsJson = JSON.stringify(newMember);
-  const response = await fetch(`${endpoint}/members.json`, {method: "POST", body: postAsJson});
+  const response = await fetch(`${endpoint}/members.json`, {
+    method: "POST",
+    body: postAsJson,
+  });
   return response;
-
 }
 
-
-function showMember(member) { // shows the individual member
+// shows the individual member
+function showMember(member) {
   const postHTML = /*html*/ ` <article class="grid-item">
                 <h1>${member.name}</h1>
                 <div class="btns">
@@ -140,11 +158,30 @@ function showMember(member) { // shows the individual member
                 
             </article>`;
   document.querySelector("#members").insertAdjacentHTML("beforeend", postHTML);
+  document
+    .querySelector("#members article:last-child .delete")
+    .addEventListener("click", () => deleteMemberClicked(member));
 }
 
-function showMembers(listOfMembers) { // goes through all of the members and displays them
+// goes through all of the members and displays them
+function showMembers(listOfMembers) {
   document.querySelector("#members").innerHTML = "";
   for (const member of listOfMembers) {
     showMember(member);
   }
+}
+// When the delete button is clicked it calls deleteMember with the id of the deleted member
+async function deleteMemberClicked(member) {
+  const response = await deleteMember(member.id);
+  if (response.ok) {
+    console.log("Member deleted!");
+    updatePostsGrid();
   }
+}
+// Deletes the member
+async function deleteMember(id) {
+  const response = await fetch(`${endpoint}/members/${id}.json`, {
+    method: "DELETE",
+  });
+  return response;
+}
