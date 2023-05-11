@@ -6,11 +6,19 @@ const endpoint = "https://delfinen-36fde-default-rtdb.firebaseio.com/";
 
 function initApp() {
   console.log("Delfinen svømmer!");
-  getMembers();
+  updatePostsGrid();
   document.querySelector(".new-member-btn").addEventListener("click", addMemberClicked);
+
+
+
+}
+async function updatePostsGrid() { // Updates the grid showing the list of members
+  const members = await getMembers();
+  showMembers(members);
 }
 
-async function getMembers() {
+
+async function getMembers() { // fetches members from firebase
   const response = await fetch(`${endpoint}/members.json`);
   const data = await response.json();
   const members = prepareMemberData(data);
@@ -18,7 +26,7 @@ async function getMembers() {
   return members;
 }
 
-function prepareMemberData(memberObject) {
+function prepareMemberData(memberObject) { // prepares the member data and returns it as an array
   const memberArray = [];
   for (const key in memberObject) {
     const member = memberObject[key];
@@ -29,7 +37,7 @@ function prepareMemberData(memberObject) {
   return memberArray;
 }
 
-function addMemberClicked() {
+function addMemberClicked() { // When Add member is clicked it opens form
   document.querySelector("#add-member-form").showModal();
   const newMemberForm = /*html*/ `
     <form id="new-member-form" method="dialog">
@@ -92,6 +100,51 @@ function addMemberClicked() {
   });
 }
 
-async function prepareNewMember() {
+
+
+async function prepareNewMember() {  // Prepares all the data for creating a new member
+  const name = document.querySelector("#name").value;
+  const age = document.querySelector("#age").value;
+  const activity = document.querySelector("#activity").value;
+  const team = document.querySelector("#team").value;
+  const disciplin = document.querySelector("#disciplin").value;
+  const subscription = document.querySelector("#subscription").value;
+
+  console.log(name, age, activity, team, disciplin, subscription);
+
+  const respone = await submitNewMember(name, age, activity, team, disciplin, subscription);
+  if (respone.ok){
   console.log("nyt medlem oprettet!");
+  updatePostsGrid();
+  }
 }
+
+
+async function submitNewMember(name, age, activity, team, disciplin, subscription){ // Takes the data received in prepareNewMember and puts it into firebase
+  console.log("Submitting new member");
+  const newMember = {name, age, activity, team, disciplin, subscription};
+  const postAsJson = JSON.stringify(newMember);
+  const response = await fetch(`${endpoint}/members.json`, {method: "POST", body: postAsJson});
+  return response;
+
+}
+
+
+function showMember(member) { // shows the individual member
+  const postHTML = /*html*/ ` <article class="grid-item">
+                <h1>${member.name}</h1>
+                <div class="btns">
+                <button class="delete">Delete</button>
+                <button class="update">Update</button>
+                </div>
+                
+            </article>`;
+  document.querySelector("#members").insertAdjacentHTML("beforeend", postHTML);
+}
+
+function showMembers(listOfMembers) { // goes through all of the members and displays them
+  document.querySelector("#members").innerHTML = "";
+  for (const member of listOfMembers) {
+    showMember(member);
+  }
+  }
