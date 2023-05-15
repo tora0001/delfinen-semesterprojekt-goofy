@@ -150,7 +150,7 @@ async function submitNewMember(
 // shows the individual member
 function showMember(member) {
   const postHTML = /*html*/ ` <article class="grid-item">
-                <h1>${member.name}</h1>
+                <h1 id="memberName">${member.name}</h1>
                 <div class="btns">
                 <button class="delete">Delete</button>
                 <button class="update">Update</button>
@@ -161,6 +161,9 @@ function showMember(member) {
   document
     .querySelector("#members article:last-child .delete")
     .addEventListener("click", () => deleteMemberClicked(member));
+  document
+    .querySelector("#members article:last-child .update")
+    .addEventListener("click", () => updateMemberClicked(member));
 }
 
 // goes through all of the members and displays them
@@ -184,4 +187,118 @@ async function deleteMember(id) {
     method: "DELETE",
   });
   return response;
+}
+
+async function updateMember(
+  id,
+  name,
+  age,
+  activity,
+  team,
+  disciplin,
+  subscription
+) {
+  const updatedMember = { name, age, activity, team, disciplin, subscription };
+  const postAsJson = JSON.stringify(updatedMember);
+  const response = await fetch(`${endpoint}/members/${id}.json`, {
+    method: "PUT",
+    body: postAsJson,
+  });
+  return response;
+}
+
+async function updateMemberClicked(member) {
+  document.querySelector("#update-form").showModal();
+
+  const updateMemberForm = /*html*/ `
+    <form id="new-member-form" method="dialog">
+    <h1>Opret nyt medlem</h1>
+    <label for="name">Navn:</label>
+    <input type="text" id="name" name="name" required placeholder="Indtast navn på medlem" />
+    <br>
+    <br>
+    <label for="age">Alder:</label>
+    <input type="text" id="age" name="age" required placeholder="Indtast alder på medlem" />
+    <br>
+    <br>
+    <label for="activity">Aktivitetsform:</label>
+    <select id="activity" required>
+      <option value="" selected>ikke valgt</option>
+      <option value="competition">Konkurrencesvømmer</option>
+      <option value="exercise">Motionist</option>
+    </select>
+    <br>
+    <br>
+    <label for="team">Hold:</label>
+    <select id="team" required>
+      <option value="" selected>ikke valgt</option>
+      <option value="junior">Junior (under 18)</option>
+      <option value="senior">Senior (18 og over)</option>
+    </select>
+    <br>
+    <br>
+    <label for="disciplin">Disciplin:</label>
+    <select id="disciplin" required>
+      <option value="" selected>ikke valgt</option>
+      <option value="breast">Brystsvømning</option>
+      <option value="butterfly">Butterfly</option>
+      <option value="crawl">Crawl</option>
+      <option value="backcrawl">Rygcrawl</option>
+    </select>
+    <br>
+    <br>
+    <label for="subscription">Medlemskab:</label>
+    <select id="subscription" required>
+      <option value="" selected>ikke valgt</option>
+      <option value="young">Ungdomssvømmer (under 18)</option>
+      <option value="senior">Seniorsvømmer (18 og over)</option>
+      <option value="old">Pensionist (60 og over)</option>
+      <option value="passive">Passivt medlemskab</option>
+    </select>
+    <br>
+    <br>
+    <button type="submit" value="submit">Opdater</button>
+    <input type="button" id="btn-cancel" value="Luk">
+    </form>
+    `;
+
+  document.querySelector("#update-form").innerHTML = updateMemberForm;
+  const name = (document.querySelector("#name").value = member.name);
+  const age = (document.querySelector("#age").value = member.age);
+  const activity = (document.querySelector("#activity").value =
+    member.activity);
+  const team = (document.querySelector("#team").value = member.team);
+  const disciplin = (document.querySelector("#disciplin").value =
+    member.disciplin);
+  const subscription = (document.querySelector("#subscription").value =
+    member.subscription);
+  document
+    .querySelector("#update-form")
+    .addEventListener("submit", () => prepareUpdatedPostData(member));
+  document.querySelector("#btn-cancel").addEventListener("click", () => {
+    document.querySelector("#update-form").close();
+  });
+}
+
+async function prepareUpdatedPostData(member) {
+  const name = document.querySelector("#name").value;
+  const age = document.querySelector("#age").value;
+  const activity = document.querySelector("#activity").value;
+  const team = document.querySelector("#team").value;
+  const disciplin = document.querySelector("#disciplin").value;
+  const subscription = document.querySelector("#subscription").value;
+
+  const response = await updateMember(
+    member.id,
+    name,
+    age,
+    activity,
+    team,
+    disciplin,
+    subscription
+  );
+  if (response.ok) {
+    console.log(`${member.name} updated!`);
+    updatePostsGrid();
+  }
 }
