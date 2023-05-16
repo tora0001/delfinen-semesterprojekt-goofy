@@ -7,9 +7,7 @@ const endpoint = "https://delfinen-36fde-default-rtdb.firebaseio.com/";
 function initApp() {
   console.log("Delfinen svømmer!");
   updatePostsGrid();
-  document
-    .querySelector(".new-member-btn")
-    .addEventListener("click", addMemberClicked);
+  document.querySelector(".new-member-btn").addEventListener("click", addMemberClicked);
 }
 // Updates the grid showing the list of members
 async function updatePostsGrid() {
@@ -94,9 +92,7 @@ function addMemberClicked() {
 
   document.querySelector("#add-member-form").innerHTML = newMemberForm;
 
-  document
-    .querySelector("#add-member-form")
-    .addEventListener("submit", prepareNewMember);
+  document.querySelector("#add-member-form").addEventListener("submit", prepareNewMember);
 
   document.querySelector("#btn-cancel").addEventListener("click", () => {
     document.querySelector("#add-member-form").close();
@@ -114,14 +110,7 @@ async function prepareNewMember() {
 
   // console.log(name, age, activity, team, disciplin, subscription);
 
-  const respone = await submitNewMember(
-    name,
-    age,
-    activity,
-    team,
-    disciplin,
-    subscription
-  );
+  const respone = await submitNewMember(name, age, activity, team, disciplin, subscription);
   if (respone.ok) {
     console.log("nyt medlem oprettet!");
     updatePostsGrid();
@@ -129,14 +118,7 @@ async function prepareNewMember() {
 }
 
 // Takes the data received in prepareNewMember and puts it into firebase
-async function submitNewMember(
-  name,
-  age,
-  activity,
-  team,
-  disciplin,
-  subscription
-) {
+async function submitNewMember(name, age, activity, team, disciplin, subscription) {
   console.log("Submitting new member");
   const newMember = { name, age, activity, team, disciplin, subscription };
   const postAsJson = JSON.stringify(newMember);
@@ -158,15 +140,9 @@ function showMember(member) {
                 
             </article>`;
   document.querySelector("#members").insertAdjacentHTML("beforeend", postHTML);
-  document
-    .querySelector("#members article:last-child .delete")
-    .addEventListener("click", () => deleteMemberClicked(member));
-  document
-    .querySelector("#members article:last-child .update")
-    .addEventListener("click", () => updateMemberClicked(member));
-  document
-    .querySelector("#members article:last-child .memberName")
-    .addEventListener("click", () => memberNameClicked(member));
+  document.querySelector("#members article:last-child .delete").addEventListener("click", () => deleteMemberClicked(member));
+  document.querySelector("#members article:last-child .update").addEventListener("click", () => updateMemberClicked(member));
+  document.querySelector("#members article:last-child .memberName").addEventListener("click", () => memberNameClicked(member));
 }
 
 // goes through all of the members and displays them
@@ -192,15 +168,7 @@ async function deleteMember(id) {
   return response;
 }
 //updates the information of the member in the firebase and returns the updated member
-async function updateMember(
-  id,
-  name,
-  age,
-  activity,
-  team,
-  disciplin,
-  subscription
-) {
+async function updateMember(id, name, age, activity, team, disciplin, subscription) {
   const updatedMember = { name, age, activity, team, disciplin, subscription };
   const postAsJson = JSON.stringify(updatedMember);
   const response = await fetch(`${endpoint}/members/${id}.json`, {
@@ -268,16 +236,11 @@ async function updateMemberClicked(member) {
   document.querySelector("#update-form").innerHTML = updateMemberForm;
   const name = (document.querySelector("#name").value = member.name);
   const age = (document.querySelector("#age").value = member.age);
-  const activity = (document.querySelector("#activity").value =
-    member.activity);
+  const activity = (document.querySelector("#activity").value = member.activity);
   const team = (document.querySelector("#team").value = member.team);
-  const disciplin = (document.querySelector("#disciplin").value =
-    member.disciplin);
-  const subscription = (document.querySelector("#subscription").value =
-    member.subscription);
-  document
-    .querySelector("#update-form")
-    .addEventListener("submit", () => prepareUpdatedPostData(member));
+  const disciplin = (document.querySelector("#disciplin").value = member.disciplin);
+  const subscription = (document.querySelector("#subscription").value = member.subscription);
+  document.querySelector("#update-form").addEventListener("submit", () => prepareUpdatedPostData(member));
   document.querySelector("#btn-cancel").addEventListener("click", () => {
     document.querySelector("#update-form").close();
   });
@@ -291,15 +254,7 @@ async function prepareUpdatedPostData(member) {
   const disciplin = document.querySelector("#disciplin").value;
   const subscription = document.querySelector("#subscription").value;
 
-  const response = await updateMember(
-    member.id,
-    name,
-    age,
-    activity,
-    team,
-    disciplin,
-    subscription
-  );
+  const response = await updateMember(member.id, name, age, activity, team, disciplin, subscription);
   if (response.ok) {
     console.log(`${member.name} updated!`);
     updatePostsGrid();
