@@ -150,7 +150,7 @@ async function submitNewMember(
 // shows the individual member
 function showMember(member) {
   const postHTML = /*html*/ ` <article class="grid-item">
-                <h1 id="memberName">${member.name}</h1>
+                <h1 class="memberName">${member.name}</h1>
                 <div class="btns">
                 <button class="delete">Delete</button>
                 <button class="update">Update</button>
@@ -164,6 +164,9 @@ function showMember(member) {
   document
     .querySelector("#members article:last-child .update")
     .addEventListener("click", () => updateMemberClicked(member));
+  document
+    .querySelector("#members article:last-child .memberName")
+    .addEventListener("click", () => memberNameClicked(member));
 }
 
 // goes through all of the members and displays them
@@ -188,7 +191,7 @@ async function deleteMember(id) {
   });
   return response;
 }
-
+//updates the information of the member in the firebase and returns the updated member
 async function updateMember(
   id,
   name,
@@ -206,7 +209,7 @@ async function updateMember(
   });
   return response;
 }
-
+// gets called when the Update button is clicked and opens the form for updating the info
 async function updateMemberClicked(member) {
   document.querySelector("#update-form").showModal();
 
@@ -279,7 +282,7 @@ async function updateMemberClicked(member) {
     document.querySelector("#update-form").close();
   });
 }
-
+// prepares the updated data and calls the updateMember function with that data
 async function prepareUpdatedPostData(member) {
   const name = document.querySelector("#name").value;
   const age = document.querySelector("#age").value;
@@ -301,4 +304,22 @@ async function prepareUpdatedPostData(member) {
     console.log(`${member.name} updated!`);
     updatePostsGrid();
   }
+}
+// opens a dialog for all the information on the member when the name is clicked
+function memberNameClicked(member) {
+  document.querySelector("#member-info").showModal();
+
+  const memberHTML = /*html*/ `
+    <h1>${member.name}</h1>
+<p>${member.age}</p>
+<p>${member.activity}</p>
+<p>${member.team}</p>
+<p>${member.disciplin}</p>
+<p>${member.subscription}</p>
+
+    <form method="dialog">
+		<button id ="closeModalButton">Close</button>
+    </form>`;
+
+  document.querySelector("#member-info").innerHTML = memberHTML;
 }
