@@ -10,11 +10,13 @@ function initApp() {
   document.querySelector(".new-result-btn").addEventListener("click", addResultClicked);
 }
 
+//updates the grid of results
 async function updatePostsGrid() {
   const results = await getResults();
   showResults(results);
 }
 
+// goes through all of the results and displays them
 function showResults(listOfMembers) {
   document.querySelector("#members").innerHTML = "";
   for (const member of listOfMembers) {
@@ -22,6 +24,7 @@ function showResults(listOfMembers) {
   }
 }
 
+//fetches results from the firebase
 async function getResults() {
   const response = await fetch(`${endpoint}/results.json`);
   const data = await response.json();
@@ -29,6 +32,7 @@ async function getResults() {
   return results;
 }
 
+// prepares the results data and returns it as an array
 function prepareResultData(resultObject) {
   const resultArray = [];
   for (const key in resultObject) {
@@ -40,6 +44,7 @@ function prepareResultData(resultObject) {
   return resultArray;
 }
 
+//connects the name from the members array to the uid in the results array
 async function getMemberName(uid) {
   const response = await fetch(`${endpoint}/members/${uid}.json`);
   const data = await response.json();
@@ -48,6 +53,7 @@ async function getMemberName(uid) {
   }
 }
 
+// shows the individual result
 function showResult(result) {
   getMemberName(result.uid).then((name) => {
     const postHTML = /*html*/ ` <article class="grid-item">
@@ -65,6 +71,7 @@ function showResult(result) {
   });
 }
 
+// Prepares all the data for creating a new result
 async function prepareNewResult() {
   const uid = document.querySelector("#uid").value;
   const time = document.querySelector("#time").value;
@@ -78,6 +85,7 @@ async function prepareNewResult() {
   }
 }
 
+// Takes the data received in prepareNewResult and puts it into firebase
 async function submitNewResult(uid, time, date, disciplin) {
   console.log("Submitting new member");
   const newResult = { uid, time, date, disciplin };
@@ -89,6 +97,7 @@ async function submitNewResult(uid, time, date, disciplin) {
   return response;
 }
 
+//gets the members so it can be connected to the result after it's been prepared as an array
 async function getMembersForResults() {
   const response = await fetch(`${endpoint}/members.json`);
   const data = await response.json();
@@ -96,6 +105,7 @@ async function getMembersForResults() {
   return members;
 }
 
+//prepares the members in an array so it can be connected to the result
 function prepareMemberDataForResults(memberObject) {
   const memberArray = [];
   for (const key in memberObject) {
@@ -107,6 +117,7 @@ function prepareMemberDataForResults(memberObject) {
   return memberArray;
 }
 
+// When Add result is clicked it opens form
 async function addResultClicked() {
   document.querySelector("#add-result-form").showModal();
 
