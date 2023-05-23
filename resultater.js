@@ -63,11 +63,12 @@ function showResult(result) {
                 <p class="resultDisciplin">${result.disciplin}</p>
                 <div class="results-btns">
                 <button class="update-result">Opdater resultat</button>
-                <button class="update-contest">Opdater stævner</button>
+                <button class="delete-result">Delete</button>
                 </div>
                 
             </article>`;
     document.querySelector("#members").insertAdjacentHTML("beforeend", postHTML);
+    document.querySelector("#members article:last-child .delete-result").addEventListener("click", () => deleteResultClicked(result));
   });
 }
 
@@ -162,3 +163,21 @@ async function addResultClicked() {
     document.querySelector("#new-result-form").close();
   });
 }
+
+
+async function deleteResultClicked(result) {
+  const response = await deleteResult(result.id);
+  if (response.ok) {
+    console.log("Result deleted!");
+    updatePostsGrid();
+  }
+}
+// Deletes the result
+async function deleteResult(id) {
+  const response = await fetch(`${endpoint}/results/${id}.json`, {
+    method: "DELETE",
+  });
+  return response;
+
+}
+

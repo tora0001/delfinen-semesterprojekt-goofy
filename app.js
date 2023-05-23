@@ -85,7 +85,7 @@ function addMemberClicked() {
     </select>
     <br>
     <br>
-    <label for="paid">Medlemskab:</label>
+    <label for="paid">Kontingent:</label>
     <select id="paid" required>
       <option value="ikkebetalt" selected>Ikke Betalt</option>
       <option value="betalt">Betalt</option>
@@ -238,7 +238,7 @@ async function updateMemberClicked(member) {
     </select>
     <br>
     <br>
-    <label for="paid">Medlemskab:</label>
+    <label for="paid">Kontingent:</label>
     <select id="paid" required>
       <option value="ikkebetalt" selected>Ikke Betalt</option>
       <option value="betalt">Betalt</option>
