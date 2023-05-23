@@ -1,1 +1,96 @@
+/* Global styling */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
 
+h1 {
+  font-size: 24px;
+}
+
+nav {
+  background-color: #f1f1f1;
+}
+
+nav a {
+  display: inline-block;
+  padding: 10px;
+  text-decoration: none;
+  color: #333;
+}
+
+nav a.active {
+  background-color: #ddd;
+}
+
+/* Grid layout */
+#members {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.grid-item {
+  border: 1px solid #ddd;
+  padding: 20px;
+}
+
+/* Form styling */
+form {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+label {
+  font-weight: bold;
+}
+
+input[type="text"],
+select {
+  width: 100%;
+  padding: 5px;
+}
+
+button[type="submit"],
+input[type="button"] {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Modal styling */
+dialog {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  padding: 20px;
+  overflow: auto;
+}
+
+dialog[open] {
+  display: block;
+}
+
+dialog form {
+  background-color: #fff;
+  padding: 20px;
+}
+
+#closeModalButton {
+  background-color: #f44336;
+}
+
+/* Active page highlighting */
+nav a.active {
+  background-color: #4caf50;
+  color: #fff;
+}
