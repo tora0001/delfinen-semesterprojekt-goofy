@@ -85,6 +85,13 @@ function addMemberClicked() {
     </select>
     <br>
     <br>
+    <label for="paid">Medlemskab:</label>
+    <select id="paid" required>
+      <option value="ikkebetalt" selected>Ikke Betalt</option>
+      <option value="betalt">Betalt</option>
+      </select>
+    <br>
+    <br>
     <button type="submit" value="submit">Opret</button>
     <input type="button" id="btn-cancel" value="Luk">
     </form>
@@ -107,10 +114,11 @@ async function prepareNewMember() {
   const team = document.querySelector("#team").value;
   const disciplin = document.querySelector("#disciplin").value;
   const subscription = document.querySelector("#subscription").value;
+  const paid = document.querySelector("#paid").value;
 
   // console.log(name, age, activity, team, disciplin, subscription);
 
-  const respone = await submitNewMember(name, age, activity, team, disciplin, subscription);
+  const respone = await submitNewMember(name, age, activity, team, disciplin, subscription, paid);
   if (respone.ok) {
     console.log("nyt medlem oprettet!");
     updatePostsGrid();
@@ -118,9 +126,9 @@ async function prepareNewMember() {
 }
 
 // Takes the data received in prepareNewMember and puts it into firebase
-async function submitNewMember(name, age, activity, team, disciplin, subscription) {
+async function submitNewMember(name, age, activity, team, disciplin, subscription, paid) {
   console.log("Submitting new member");
-  const newMember = { name, age, activity, team, disciplin, subscription };
+  const newMember = { name, age, activity, team, disciplin, subscription, paid };
   const postAsJson = JSON.stringify(newMember);
   const response = await fetch(`${endpoint}/members.json`, {
     method: "POST",
@@ -162,14 +170,16 @@ async function deleteMemberClicked(member) {
 }
 // Deletes the member
 async function deleteMember(id) {
+  deleteResultsForMember(id);
   const response = await fetch(`${endpoint}/members/${id}.json`, {
     method: "DELETE",
   });
   return response;
+
 }
 //updates the information of the member in the firebase and returns the updated member
-async function updateMember(id, name, age, activity, team, disciplin, subscription) {
-  const updatedMember = { name, age, activity, team, disciplin, subscription };
+async function updateMember(id, name, age, activity, team, disciplin, subscription, paid) {
+  const updatedMember = { name, age, activity, team, disciplin, subscription, paid };
   const postAsJson = JSON.stringify(updatedMember);
   const response = await fetch(`${endpoint}/members/${id}.json`, {
     method: "PUT",
@@ -228,6 +238,13 @@ async function updateMemberClicked(member) {
     </select>
     <br>
     <br>
+    <label for="paid">Medlemskab:</label>
+    <select id="paid" required>
+      <option value="ikkebetalt" selected>Ikke Betalt</option>
+      <option value="betalt">Betalt</option>
+      </select>
+    <br>
+    <br>
     <button type="submit" value="submit">Opdater</button>
     <input type="button" id="btn-cancel" value="Luk">
     </form>
@@ -239,7 +256,8 @@ async function updateMemberClicked(member) {
   const activity = (document.querySelector("#activity").value = member.activity);
   const team = (document.querySelector("#team").value = member.team);
   const disciplin = (document.querySelector("#disciplin").value = member.disciplin);
-  const subscription = (document.querySelector("#subscription").value = member.subscription);
+  const subscription = (document.querySelector("#subscription").value = member.subscription); 
+  const paid = (document.querySelector("#paid").value = member.paid); 
   document.querySelector("#update-form").addEventListener("submit", () => prepareUpdatedPostData(member));
   document.querySelector("#btn-cancel").addEventListener("click", () => {
     document.querySelector("#update-form").close();
@@ -253,8 +271,9 @@ async function prepareUpdatedPostData(member) {
   const team = document.querySelector("#team").value;
   const disciplin = document.querySelector("#disciplin").value;
   const subscription = document.querySelector("#subscription").value;
+  const paid = document.querySelector("#paid").value;
 
-  const response = await updateMember(member.id, name, age, activity, team, disciplin, subscription);
+  const response = await updateMember(member.id, name, age, activity, team, disciplin, subscription, paid);
   if (response.ok) {
     console.log(`${member.name} updated!`);
     updatePostsGrid();
@@ -271,10 +290,53 @@ function memberNameClicked(member) {
 <p>${member.team}</p>
 <p>${member.disciplin}</p>
 <p>${member.subscription}</p>
+<p>${member.paid}</p>
 
     <form method="dialog">
 		<button id ="closeModalButton">Close</button>
     </form>`;
 
   document.querySelector("#member-info").innerHTML = memberHTML;
+}
+
+
+
+
+//fetches results from the firebase
+async function getResults() {
+  const response = await fetch(`${endpoint}/results.json`);
+  const data = await response.json();
+  const results = prepareResultData(data);
+  return results;
+}
+
+// prepares the results data and returns it as an array
+function prepareResultData(resultObject) {
+  const resultArray = [];
+  for (const key in resultObject) {
+    const result = resultObject[key];
+    result.id = key;
+    resultArray.push(result);
+  }
+  console.log(resultArray);
+  return resultArray;
+}
+// when you delete a member, it also deletes result for that member
+async function deleteResultsForMember(id){
+const results = await getResults();
+console.log(results);
+
+for (const result of results) {
+  checkForUid(result);
+}
+//checks every UID if its the same as the member.id we deleted and deletes the result if it matches
+async function checkForUid(result){
+  console.log(`checking ${result.uid}`);
+  if(result.uid == id){
+    const response = await fetch(`${endpoint}/results/${result.id}.json`, {
+      method: "DELETE",
+    });
+    return response;
+  }
+}
 }
