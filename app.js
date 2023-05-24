@@ -10,6 +10,12 @@ function initApp() {
   document
     .querySelector(".new-member-btn")
     .addEventListener("click", addMemberClicked);
+  document
+    .querySelector("#input-search")
+    .addEventListener("keydown", inputSearchChanged);
+  document
+    .querySelector("#input-search")
+    .addEventListener("search", inputSearchChanged);
 }
 // Updates the grid showing the list of members
 async function updatePostsGrid() {
@@ -400,4 +406,14 @@ async function deleteResultsForMember(id) {
       return response;
     }
   }
+}
+
+async function inputSearchChanged(event) {
+  console.log("Searching");
+  const query = event.target.value.toLowerCase();
+  const members = await getMembers();
+  const filteredPosts = members.filter((member) =>
+    member.name.toLowerCase().includes(query)
+  );
+  showMembers(filteredPosts);
 }
