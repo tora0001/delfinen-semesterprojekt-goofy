@@ -7,7 +7,9 @@ const endpoint = "https://delfinen-36fde-default-rtdb.firebaseio.com/";
 function initApp() {
   console.log("Delfinen svømmer!");
   updatePostsGrid();
-  document.querySelector(".new-member-btn").addEventListener("click", addMemberClicked);
+  document
+    .querySelector(".new-member-btn")
+    .addEventListener("click", addMemberClicked);
 }
 // Updates the grid showing the list of members
 async function updatePostsGrid() {
@@ -78,10 +80,10 @@ function addMemberClicked() {
     <label for="subscription">Medlemskab:</label>
     <select id="subscription" required>
       <option value="" selected>ikke valgt</option>
-      <option value="young">Ungdomssvømmer (under 18)</option>
-      <option value="senior">Seniorsvømmer (18 og over)</option>
-      <option value="old">Pensionist (60 og over)</option>
-      <option value="passive">Passivt medlemskab</option>
+      <option value="1000">Ungdomssvømmer (under 18)</option>
+      <option value="1600">Seniorsvømmer (18 og over)</option>
+      <option value="1250">Pensionist (60 og over)</option>
+      <option value="500">Passivt medlemskab</option>
     </select>
     <br>
     <br>
@@ -99,7 +101,9 @@ function addMemberClicked() {
 
   document.querySelector("#add-member-form").innerHTML = newMemberForm;
 
-  document.querySelector("#add-member-form").addEventListener("submit", prepareNewMember);
+  document
+    .querySelector("#add-member-form")
+    .addEventListener("submit", prepareNewMember);
 
   document.querySelector("#btn-cancel").addEventListener("click", () => {
     document.querySelector("#add-member-form").close();
@@ -118,7 +122,15 @@ async function prepareNewMember() {
 
   // console.log(name, age, activity, team, disciplin, subscription);
 
-  const respone = await submitNewMember(name, age, activity, team, disciplin, subscription, paid);
+  const respone = await submitNewMember(
+    name,
+    age,
+    activity,
+    team,
+    disciplin,
+    subscription,
+    paid
+  );
   if (respone.ok) {
     console.log("nyt medlem oprettet!");
     updatePostsGrid();
@@ -126,9 +138,25 @@ async function prepareNewMember() {
 }
 
 // Takes the data received in prepareNewMember and puts it into firebase
-async function submitNewMember(name, age, activity, team, disciplin, subscription, paid) {
+async function submitNewMember(
+  name,
+  age,
+  activity,
+  team,
+  disciplin,
+  subscription,
+  paid
+) {
   console.log("Submitting new member");
-  const newMember = { name, age, activity, team, disciplin, subscription, paid };
+  const newMember = {
+    name,
+    age,
+    activity,
+    team,
+    disciplin,
+    subscription,
+    paid,
+  };
   const postAsJson = JSON.stringify(newMember);
   const response = await fetch(`${endpoint}/members.json`, {
     method: "POST",
@@ -148,9 +176,15 @@ function showMember(member) {
                 
             </article>`;
   document.querySelector("#members").insertAdjacentHTML("beforeend", postHTML);
-  document.querySelector("#members article:last-child .delete").addEventListener("click", () => deleteMemberClicked(member));
-  document.querySelector("#members article:last-child .update").addEventListener("click", () => updateMemberClicked(member));
-  document.querySelector("#members article:last-child .memberName").addEventListener("click", () => memberNameClicked(member));
+  document
+    .querySelector("#members article:last-child .delete")
+    .addEventListener("click", () => deleteMemberClicked(member));
+  document
+    .querySelector("#members article:last-child .update")
+    .addEventListener("click", () => updateMemberClicked(member));
+  document
+    .querySelector("#members article:last-child .memberName")
+    .addEventListener("click", () => memberNameClicked(member));
 }
 
 // goes through all of the members and displays them
@@ -175,11 +209,27 @@ async function deleteMember(id) {
     method: "DELETE",
   });
   return response;
-
 }
 //updates the information of the member in the firebase and returns the updated member
-async function updateMember(id, name, age, activity, team, disciplin, subscription, paid) {
-  const updatedMember = { name, age, activity, team, disciplin, subscription, paid };
+async function updateMember(
+  id,
+  name,
+  age,
+  activity,
+  team,
+  disciplin,
+  subscription,
+  paid
+) {
+  const updatedMember = {
+    name,
+    age,
+    activity,
+    team,
+    disciplin,
+    subscription,
+    paid,
+  };
   const postAsJson = JSON.stringify(updatedMember);
   const response = await fetch(`${endpoint}/members/${id}.json`, {
     method: "PUT",
@@ -231,10 +281,10 @@ async function updateMemberClicked(member) {
     <label for="subscription">Medlemskab:</label>
     <select id="subscription" required>
       <option value="" selected>ikke valgt</option>
-      <option value="young">Ungdomssvømmer (under 18)</option>
-      <option value="senior">Seniorsvømmer (18 og over)</option>
-      <option value="old">Pensionist (60 og over)</option>
-      <option value="passive">Passivt medlemskab</option>
+      <option value="1000">Ungdomssvømmer (under 18)</option>
+      <option value="1600">Seniorsvømmer (18 og over)</option>
+      <option value="1250">Pensionist (60 og over)</option>
+      <option value="500">Passivt medlemskab</option>
     </select>
     <br>
     <br>
@@ -253,12 +303,17 @@ async function updateMemberClicked(member) {
   document.querySelector("#update-form").innerHTML = updateMemberForm;
   const name = (document.querySelector("#name").value = member.name);
   const age = (document.querySelector("#age").value = member.age);
-  const activity = (document.querySelector("#activity").value = member.activity);
+  const activity = (document.querySelector("#activity").value =
+    member.activity);
   const team = (document.querySelector("#team").value = member.team);
-  const disciplin = (document.querySelector("#disciplin").value = member.disciplin);
-  const subscription = (document.querySelector("#subscription").value = member.subscription); 
-  const paid = (document.querySelector("#paid").value = member.paid); 
-  document.querySelector("#update-form").addEventListener("submit", () => prepareUpdatedPostData(member));
+  const disciplin = (document.querySelector("#disciplin").value =
+    member.disciplin);
+  const subscription = (document.querySelector("#subscription").value =
+    member.subscription);
+  const paid = (document.querySelector("#paid").value = member.paid);
+  document
+    .querySelector("#update-form")
+    .addEventListener("submit", () => prepareUpdatedPostData(member));
   document.querySelector("#btn-cancel").addEventListener("click", () => {
     document.querySelector("#update-form").close();
   });
@@ -273,7 +328,16 @@ async function prepareUpdatedPostData(member) {
   const subscription = document.querySelector("#subscription").value;
   const paid = document.querySelector("#paid").value;
 
-  const response = await updateMember(member.id, name, age, activity, team, disciplin, subscription, paid);
+  const response = await updateMember(
+    member.id,
+    name,
+    age,
+    activity,
+    team,
+    disciplin,
+    subscription,
+    paid
+  );
   if (response.ok) {
     console.log(`${member.name} updated!`);
     updatePostsGrid();
@@ -299,9 +363,6 @@ function memberNameClicked(member) {
   document.querySelector("#member-info").innerHTML = memberHTML;
 }
 
-
-
-
 //fetches results from the firebase
 async function getResults() {
   const response = await fetch(`${endpoint}/results.json`);
@@ -322,21 +383,21 @@ function prepareResultData(resultObject) {
   return resultArray;
 }
 // when you delete a member, it also deletes result for that member
-async function deleteResultsForMember(id){
-const results = await getResults();
-console.log(results);
+async function deleteResultsForMember(id) {
+  const results = await getResults();
+  console.log(results);
 
-for (const result of results) {
-  checkForUid(result);
-}
-//checks every UID if its the same as the member.id we deleted and deletes the result if it matches
-async function checkForUid(result){
-  console.log(`checking ${result.uid}`);
-  if(result.uid == id){
-    const response = await fetch(`${endpoint}/results/${result.id}.json`, {
-      method: "DELETE",
-    });
-    return response;
+  for (const result of results) {
+    checkForUid(result);
   }
-}
+  //checks every UID if its the same as the member.id we deleted and deletes the result if it matches
+  async function checkForUid(result) {
+    console.log(`checking ${result.uid}`);
+    if (result.uid == id) {
+      const response = await fetch(`${endpoint}/results/${result.id}.json`, {
+        method: "DELETE",
+      });
+      return response;
+    }
+  }
 }
