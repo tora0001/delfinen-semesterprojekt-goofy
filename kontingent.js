@@ -1,6 +1,7 @@
 "use strict";
 
 let amount = 0;
+let notPaid = 0;
 const endpoint = "https://delfinen-36fde-default-rtdb.firebaseio.com/";
 window.addEventListener("load", initApp);
 
@@ -35,19 +36,32 @@ function addTotalAmount(members) {
   members.forEach(findAmount);
   function findAmount(member) {
     console.log("run");
-    if (member.subscription == "young") {
+    if (member.subscription == "1000") {
+      if (member.paid == "ikkebetalt") {
+        notPaid = notPaid + 1000;
+      }
       amount = amount + 1000;
-    } else if (member.subscription == "senior") {
+    } else if (member.subscription == "1600") {
+      if (member.paid == "ikkebetalt") {
+        notPaid = notPaid + 1600;
+      }
       amount = amount + 1600;
-    } else if (member.subscription == "old") {
+    } else if (member.subscription == "1250") {
+      if (member.paid == "ikkebetalt") {
+        notPaid = notPaid + 1250;
+      }
       amount = amount + 1250;
-    } else if (member.subscription == "passive") {
+    } else if (member.subscription == "500") {
+      if (member.paid == "ikkebetalt") {
+        notPaid = notPaid + 500;
+      }
       amount = amount + 500;
     }
   }
 }
 function showTotalAmount() {
   document.querySelector("#amount").innerHTML = amount;
+  document.querySelector("#notPaid").innerHTML = notPaid;
 }
 
 function showMember(member) {
@@ -55,7 +69,7 @@ function showMember(member) {
   const postHTML = /*html*/ ` <article class="grid-item">
 
                   <h1 class="memberName">${member.name}</h1>
-                  <p>Har ikke betalt</p>
+                  <p>Mangler at betale ${member.subscription}</p>
             
               </article>`;
   if (member.paid == "ikkebetalt") {
