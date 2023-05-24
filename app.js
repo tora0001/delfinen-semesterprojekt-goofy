@@ -12,7 +12,7 @@ function initApp() {
     .addEventListener("click", addMemberClicked);
   document
     .querySelector("#input-search")
-    .addEventListener("keydown", inputSearchChanged);
+    .addEventListener("keyup", inputSearchChanged);
   document
     .querySelector("#input-search")
     .addEventListener("search", inputSearchChanged);
