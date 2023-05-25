@@ -7,15 +7,9 @@ const endpoint = "https://delfinen-36fde-default-rtdb.firebaseio.com/";
 function initApp() {
   console.log("Delfinen svømmer!");
   updatePostsGrid();
-  document
-    .querySelector(".new-member-btn")
-    .addEventListener("click", addMemberClicked);
-  document
-    .querySelector("#input-search")
-    .addEventListener("keyup", inputSearchChanged);
-  document
-    .querySelector("#input-search")
-    .addEventListener("search", inputSearchChanged);
+  document.querySelector(".new-member-btn").addEventListener("click", addMemberClicked);
+  document.querySelector("#input-search").addEventListener("keyup", inputSearchChanged);
+  document.querySelector("#input-search").addEventListener("search", inputSearchChanged);
 }
 // Updates the grid showing the list of members
 async function updatePostsGrid() {
@@ -107,9 +101,7 @@ function addMemberClicked() {
 
   document.querySelector("#add-member-form").innerHTML = newMemberForm;
 
-  document
-    .querySelector("#add-member-form")
-    .addEventListener("submit", prepareNewMember);
+  document.querySelector("#add-member-form").addEventListener("submit", prepareNewMember);
 
   document.querySelector("#btn-cancel").addEventListener("click", () => {
     document.querySelector("#add-member-form").close();
@@ -128,15 +120,7 @@ async function prepareNewMember() {
 
   // console.log(name, age, activity, team, disciplin, subscription);
 
-  const respone = await submitNewMember(
-    name,
-    age,
-    activity,
-    team,
-    disciplin,
-    subscription,
-    paid
-  );
+  const respone = await submitNewMember(name, age, activity, team, disciplin, subscription, paid);
   if (respone.ok) {
     console.log("nyt medlem oprettet!");
     updatePostsGrid();
@@ -144,15 +128,7 @@ async function prepareNewMember() {
 }
 
 // Takes the data received in prepareNewMember and puts it into firebase
-async function submitNewMember(
-  name,
-  age,
-  activity,
-  team,
-  disciplin,
-  subscription,
-  paid
-) {
+async function submitNewMember(name, age, activity, team, disciplin, subscription, paid) {
   console.log("Submitting new member");
   const newMember = {
     name,
@@ -176,21 +152,15 @@ function showMember(member) {
   const postHTML = /*html*/ ` <article class="grid-item">
                 <h1 class="memberName">${member.name}</h1>
                 <div class="btns">
-                <button class="delete">Delete</button>
-                <button class="update">Update</button>
+                <button class="delete">Fjern medlem</button>
+                <button class="update">Opdater oplysninger</button>
                 </div>
                 
             </article>`;
   document.querySelector("#members").insertAdjacentHTML("beforeend", postHTML);
-  document
-    .querySelector("#members article:last-child .delete")
-    .addEventListener("click", () => deleteMemberClicked(member));
-  document
-    .querySelector("#members article:last-child .update")
-    .addEventListener("click", () => updateMemberClicked(member));
-  document
-    .querySelector("#members article:last-child .memberName")
-    .addEventListener("click", () => memberNameClicked(member));
+  document.querySelector("#members article:last-child .delete").addEventListener("click", () => deleteMemberClicked(member));
+  document.querySelector("#members article:last-child .update").addEventListener("click", () => updateMemberClicked(member));
+  document.querySelector("#members article:last-child .memberName").addEventListener("click", () => memberNameClicked(member));
 }
 
 // goes through all of the members and displays them
@@ -217,16 +187,7 @@ async function deleteMember(id) {
   return response;
 }
 //updates the information of the member in the firebase and returns the updated member
-async function updateMember(
-  id,
-  name,
-  age,
-  activity,
-  team,
-  disciplin,
-  subscription,
-  paid
-) {
+async function updateMember(id, name, age, activity, team, disciplin, subscription, paid) {
   const updatedMember = {
     name,
     age,
@@ -309,17 +270,12 @@ async function updateMemberClicked(member) {
   document.querySelector("#update-form").innerHTML = updateMemberForm;
   const name = (document.querySelector("#name").value = member.name);
   const age = (document.querySelector("#age").value = member.age);
-  const activity = (document.querySelector("#activity").value =
-    member.activity);
+  const activity = (document.querySelector("#activity").value = member.activity);
   const team = (document.querySelector("#team").value = member.team);
-  const disciplin = (document.querySelector("#disciplin").value =
-    member.disciplin);
-  const subscription = (document.querySelector("#subscription").value =
-    member.subscription);
+  const disciplin = (document.querySelector("#disciplin").value = member.disciplin);
+  const subscription = (document.querySelector("#subscription").value = member.subscription);
   const paid = (document.querySelector("#paid").value = member.paid);
-  document
-    .querySelector("#update-form")
-    .addEventListener("submit", () => prepareUpdatedPostData(member));
+  document.querySelector("#update-form").addEventListener("submit", () => prepareUpdatedPostData(member));
   document.querySelector("#btn-cancel").addEventListener("click", () => {
     document.querySelector("#update-form").close();
   });
@@ -334,16 +290,7 @@ async function prepareUpdatedPostData(member) {
   const subscription = document.querySelector("#subscription").value;
   const paid = document.querySelector("#paid").value;
 
-  const response = await updateMember(
-    member.id,
-    name,
-    age,
-    activity,
-    team,
-    disciplin,
-    subscription,
-    paid
-  );
+  const response = await updateMember(member.id, name, age, activity, team, disciplin, subscription, paid);
   if (response.ok) {
     console.log(`${member.name} updated!`);
     updatePostsGrid();
@@ -355,12 +302,12 @@ function memberNameClicked(member) {
 
   const memberHTML = /*html*/ `
     <h1>${member.name}</h1>
-<p>${member.age}</p>
-<p>${member.activity}</p>
-<p>${member.team}</p>
-<p>${member.disciplin}</p>
-<p>${member.subscription}</p>
-<p>${member.paid}</p>
+<p><b>Alder: </b> ${member.age}</p>
+<p><b>Aktivitetsform: </b>${member.activity}</p>
+<p><b>Hold: </b>${member.team}</p>
+<p><b>Disciplin: </b>${member.disciplin}</p>
+<p><b>Medlemskab: </b>${member.subscription}</p>
+<p><b>Betaling: </b>${member.paid}</p>
 
     <form method="dialog">
 		<button id ="closeModalButton">Close</button>
@@ -412,8 +359,6 @@ async function inputSearchChanged(event) {
   console.log("Searching");
   const query = event.target.value.toLowerCase();
   const members = await getMembers();
-  const filteredPosts = members.filter((member) =>
-    member.name.toLowerCase().includes(query)
-  );
+  const filteredPosts = members.filter((member) => member.name.toLowerCase().includes(query));
   showMembers(filteredPosts);
 }
