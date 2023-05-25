@@ -149,7 +149,7 @@ async function addResultClicked() {
       <br>
       <br>
       <label for="time">Tid:</label>
-      <input type="text" id="time" name="time" required placeholder="00:00"/>
+      <input type="text" id="time" name="time" required placeholder="Indtast tid i sekunder"/>
       <br>
       <br>
       <label for="competition">Stævne:</label>
