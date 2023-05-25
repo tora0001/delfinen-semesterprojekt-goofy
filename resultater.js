@@ -238,13 +238,13 @@ async function showResultsTop(listOfMembers) {
       <option value="Butterfly">Butterfly</option>
       <option value="Crawl">Crawl</option>
       <option value="Ryg crawl">Ryg crawl</option>
-    </select>;
+    </select>
 
     <select name="filter-by-age-top" id="filter-by-age-top">
       <option value="" selected>Alle hold</option>
       <option value="Junior">Junior</option>
       <option value="Senior">Senior</option>
-    </select>;
+    </select>
   `;
 
   const topDisciplin = (document.querySelector("#filter-by-disciplin-top").value = selectedDisciplin);
