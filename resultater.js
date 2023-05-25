@@ -70,8 +70,9 @@ function showResult(result) {
                 <p class="resultDisciplin"><b>Disciplin:</b> ${result.disciplin}</p>
                 <p class="resultCompetition"><b>Stævne:</b> ${result.competition}</p>
                 <p class="resultPlacement"><b>Placering:</b> ${result.placement}</p>
+                <p class="resultTeam"><b>Hold:</b> ${result.team}</p>
                 <div class="results-btns">
-                <button class="delete-result">Delete</button>
+                <button class="delete-result">Slet Resultat</button>
                 </div>
                 
             </article>`;
@@ -93,8 +94,9 @@ async function prepareNewResult() {
   const disciplin = document.querySelector("#disciplin").value;
   const competition = document.querySelector("#competition").value;
   const placement = document.querySelector("#placement").value;
+  const team = document.querySelector("#team").value;
 
-  const respone = await submitNewResult(uid, time, date, disciplin, competition, placement);
+  const respone = await submitNewResult(uid, time, date, disciplin, competition, placement, team);
   if (respone.ok) {
     console.log("nyt medlem oprettet!");
     updatePostsGrid();
@@ -102,9 +104,9 @@ async function prepareNewResult() {
 }
 
 // Takes the data received in prepareNewResult and puts it into firebase
-async function submitNewResult(uid, time, date, disciplin, competition, placement) {
+async function submitNewResult(uid, time, date, disciplin, competition, placement, team) {
   console.log("Submitting new member");
-  const newResult = { uid, time, date, disciplin, competition, placement };
+  const newResult = { uid, time, date, disciplin, competition, placement, team };
   const postAsJson = JSON.stringify(newResult);
   const response = await fetch(`${endpoint}/results.json`, {
     method: "POST",
@@ -150,7 +152,7 @@ async function addResultClicked() {
       <br>
       <br>
       <label for="time">Tid:</label>
-      <input type="text" id="time" name="time" required placeholder="00:00"/>
+      <input type="text" id="time" name="time" required placeholder="Indtast tid i sekunder"/>
       <br>
       <br>
       <label for="competition">Stævne:</label>
@@ -168,10 +170,18 @@ async function addResultClicked() {
       <label for="disciplin">Disciplin:</label>
       <select id="disciplin" required>
         <option value="" selected>ikke valgt</option>
-        <option value="breast">Brystsvømning</option>
-        <option value="butterfly">Butterfly</option>
-        <option value="crawl">Crawl</option>
-        <option value="backcrawl">Rygcrawl</option>
+        <option value="Brystsvømning">Brystsvømning</option>
+        <option value="Butterfly">Butterfly</option>
+        <option value="Crawl">Crawl</option>
+        <option value="Ryg Crawl">Rygcrawl</option>
+      </select>
+      <br>
+      <br>
+      <label for="team">Hold:</label>
+      <select id="team" required>
+        <option value="" selected>ikke valgt</option>
+        <option value="Senior">Senior</option>
+        <option value="Junior">Junior</option>
       </select>
       <br>
       <br>
