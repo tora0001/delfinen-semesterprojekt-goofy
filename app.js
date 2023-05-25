@@ -166,6 +166,7 @@ function showMember(member) {
 // goes through all of the members and displays them
 function showMembers(listOfMembers) {
   document.querySelector("#members").innerHTML = "";
+  listOfMembers.sort((a, b) => a.age - b.age);
   for (const member of listOfMembers) {
     showMember(member);
   }

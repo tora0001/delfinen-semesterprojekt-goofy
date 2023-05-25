@@ -24,11 +24,8 @@ async function updatePostsGrid() {
 // goes through all of the results and displays them and also takes the filter into consideration
 function showResults(listOfMembers) {
   document.querySelector("#members").innerHTML = "";
-
   for (const member of listOfMembers) {
-    if (selectedDisciplin === "" || member.disciplin === selectedDisciplin) {
-      showResult(member);
-    }
+    showResult(member);
   }
 }
 
@@ -48,6 +45,7 @@ function prepareResultData(resultObject) {
     result.id = key;
     resultArray.push(result);
   }
+
   console.log(resultArray);
   return resultArray;
 }
@@ -62,24 +60,29 @@ async function getMemberName(uid) {
 }
 
 // shows the individual result
-function showResult(result) {
-  getMemberName(result.uid).then((name) => {
-    const postHTML = /*html*/ ` <article class="grid-item">
-                <h1 class="resultName">${name}</h1>
-                <p class="resultTime"><b>Tid:</b> ${result.time} sekunder</p>
-                <p class="resultDate"><b>Dato:</b> ${result.date}</p>
-                <p class="resultDisciplin"><b>Disciplin:</b> ${result.disciplin}</p>
-                <p class="resultCompetition"><b>Stævne:</b> ${result.competition}</p>
-                <p class="resultPlacement"><b>Placering:</b> ${result.placement}</p>
-                <p class="resultTeam"><b>Hold:</b> ${result.team}</p>
-                <div class="results-btns">
-                <button class="delete-result">Slet Resultat</button>
-                </div>
-                
-            </article>`;
-    document.querySelector("#members").insertAdjacentHTML("beforeend", postHTML);
-    document.querySelector("#members article:last-child .delete-result").addEventListener("click", () => deleteResultClicked(result));
-  });
+async function showResult(result) {
+  let name = await getMemberName(result.uid);
+  // const postHTML = /*html*/ ` <article class="grid-item">
+  //             <h1 class="resultName">${name}</h1>
+  //             <p class="resultTime"><b>Tid:</b> ${result.time}</p>
+  //             <p class="resultDate"><b>Dato:</b> ${result.date}</p>
+  //             <p class="resultDisciplin"><b>Disciplin:</b> ${result.disciplin}</p>
+  //             <p class="resultCompetition"><b>Stævne:</b> ${result.competition}</p>
+  //             <p class="resultPlacement"><b>Placering:</b> ${result.placement}</p>
+  //             <p class="resultTeam"><b>Hold:</b> ${result.team}</p>
+  //             <div class="results-btns">
+  //             <button class="delete-result">Slet Resultat</button>
+  //             </div>
+
+  //         </article>`;
+
+  const postHTML = /*html*/ ` <article class="grid-item">
+    <h1 class="resultName">${name}</h1>
+               <p class="resultTime"><b>Tid:</b> ${result.time}</p>
+               <button class="delete-result">Slet Resultat</button>
+    </article>`;
+  document.querySelector("#members").insertAdjacentHTML("beforeend", postHTML);
+  document.querySelector("#members article:last-child .delete-result").addEventListener("click", () => deleteResultClicked(result));
 }
 
 // function filterResults(event) {
@@ -221,45 +224,67 @@ async function topButtonClicked() {
 
 // goes through all of the results and displays them and also takes the filter into consideration
 async function showResultsTop(listOfMembers) {
-  document.querySelector("#top-five-dialog").innerHTML = /*html*/ `      
-  <select name="filter-by-disciplin-top" id="filter-by-disciplin-top">
-  <option value="" selected>Alle discipliner</option>
-  <option value="Brystsvømning">Brystsvømning</option>
-  <option value="Butterfly">Butterfly</option>
-  <option value="Crawl">Crawl</option>
-  <option value="Ryg crawl">Ryg crawl</option>
-</select>
+  const filteredResults = listOfMembers.filter((member) => (selectedDisciplin === "" || member.disciplin === selectedDisciplin) && (selectedTeam === "" || member.team === selectedTeam));
 
-<select name="filter-by-age-top" id="filter-by-age-top">
-<option value="" selected>Alle hold</option>
-<option value="Junior">Junior</option>
-<option value="Senior">Senior</option>
-</select>
+  const sortedResults = filteredResults.sort((a, b) => a.time - b.time);
 
-`;
+  // Fetch member names synchronously
+  const memberNames = await fetchMemberNames(sortedResults.map((member) => member.uid));
+
+  document.querySelector("#top-five-dialog").innerHTML = /*html*/ `
+    <select name="filter-by-disciplin-top" id="filter-by-disciplin-top">
+      <option value="" selected>Alle discipliner</option>
+      <option value="Brystsvømning">Brystsvømning</option>
+      <option value="Butterfly">Butterfly</option>
+      <option value="Crawl">Crawl</option>
+      <option value="Ryg crawl">Ryg crawl</option>
+    </select>;
+
+    <select name="filter-by-age-top" id="filter-by-age-top">
+      <option value="" selected>Alle hold</option>
+      <option value="Junior">Junior</option>
+      <option value="Senior">Senior</option>
+    </select>;
+  `;
+
   const topDisciplin = (document.querySelector("#filter-by-disciplin-top").value = selectedDisciplin);
   const topTeam = (document.querySelector("#filter-by-age-top").value = selectedTeam);
 
   document.querySelector("#filter-by-disciplin-top").addEventListener("change", filterResultsTop);
   document.querySelector("#filter-by-age-top").addEventListener("change", filterResultsTopAge);
-  for (const member of listOfMembers) {
-    if ((selectedDisciplin === "" || member.disciplin === selectedDisciplin) && (selectedTeam === "" || member.team === selectedTeam)) {
-      showTopResult(member);
-    }
+
+  topFiveIncludes = [];
+
+  for (const member of sortedResults) {
+    if (!topFiveIncludes.includes(memberNames[member.uid])) showTopResult(member, memberNames[member.uid]);
   }
 }
 
-// shows the individual result
-function showTopResult(result) {
-  console.log("heeey");
-  getMemberName(result.uid).then((name) => {
-    const postHTML = /*html*/ ` <article id="top-five-grid" class="grid-item-top">
-                <h2 class="resultName">${name}</h2>
-                <p class="resultTime"><b>Tid:</b> ${result.time} Sekunder</p>
-            </article>`;
-    document.querySelector("#top-five-dialog").insertAdjacentHTML("beforeend", postHTML);
-  });
+// Fetch member names synchronously
+async function fetchMemberNames(uids) {
+  const memberNames = {};
+
+  for (const uid of uids) {
+    const name = await getMemberName(uid);
+    memberNames[uid] = name;
+  }
+
+  return memberNames;
 }
+
+let topFiveIncludes = [];
+// shows the individual result
+function showTopResult(result, name) {
+  const postHTML = /*html*/ `
+    <article class="grid-item">
+      <h1 class="resultName">${name}</h1>
+      <p class="resultTime"><b>Tid:</b> ${result.time}</p>
+    </article>
+  `;
+  document.querySelector("#top-five-dialog").insertAdjacentHTML("beforeend", postHTML);
+  topFiveIncludes.push(name);
+}
+
 async function filterResultsTop(event) {
   selectedDisciplin = event.target.value;
   const results = await getResults();
