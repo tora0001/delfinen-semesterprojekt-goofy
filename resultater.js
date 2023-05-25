@@ -62,9 +62,9 @@ async function getMemberName(uid) {
 // shows the individual result
 async function showResult(result) {
   let name = await getMemberName(result.uid);
-    const postHTML = /*html*/ ` <article class="grid-item">
+  const postHTML = /*html*/ ` <article class="grid-item">
                 <h1 class="resultName">${name}</h1>
-                <p class="resultTime"><b>Tid:</b> ${result.time}</p>
+                <p class="resultTime"><b>Tid:</b> ${result.time} sekunder</p>
                 <p class="resultDate"><b>Dato:</b> ${result.date}</p>
                 <p class="resultDisciplin"><b>Disciplin:</b> ${result.disciplin}</p>
                 <p class="resultCompetition"><b>Stævne:</b> ${result.competition}</p>
@@ -76,9 +76,8 @@ async function showResult(result) {
                 
             </article>`;
 
-    document.querySelector("#members").insertAdjacentHTML("beforeend", postHTML);
-    document.querySelector("#members article:last-child .delete-result").addEventListener("click", () => deleteResultClicked(result));
-  ;
+  document.querySelector("#members").insertAdjacentHTML("beforeend", postHTML);
+  document.querySelector("#members article:last-child .delete-result").addEventListener("click", () => deleteResultClicked(result));
 }
 
 // function filterResults(event) {
@@ -274,7 +273,7 @@ function showTopResult(result, name) {
   const postHTML = /*html*/ `
     <article class="grid-item">
       <h1 class="resultName">${name}</h1>
-      <p class="resultTime"><b>Tid:</b> ${result.time}</p>
+      <p class="resultTime"><b>Tid:</b> ${result.time} sekunder</p>
     </article>
   `;
   document.querySelector("#top-five-dialog").insertAdjacentHTML("beforeend", postHTML);
