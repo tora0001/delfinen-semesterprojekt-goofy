@@ -11,6 +11,7 @@ function initApp() {
   document.querySelector("#filter-by-disciplin").addEventListener("change", filterResults);
   updatePostsGrid();
   document.querySelector(".new-result-btn").addEventListener("click", addResultClicked);
+  document.querySelector(".open-top-btn").addEventListener("click", topButtonClicked);
 }
 
 //updates the grid of results
@@ -199,4 +200,48 @@ async function deleteResult(id) {
     method: "DELETE",
   });
   return response;
+}
+
+
+async function topButtonClicked(){
+  document.querySelector("#top-five-dialog").showModal();
+  const results = await getResults();
+  showResultsTop(results);
+}
+
+// goes through all of the results and displays them and also takes the filter into consideration
+function showResultsTop(listOfMembers) {
+  document.querySelector("#top-five-dialog").innerHTML = /*html*/ `      
+  <select name="filter-by-disciplin-top" id="filter-by-disciplin-top">
+  <option value="" selected>Alle discipliner</option>
+  <option value="Brystsvømning">Brystsvømning</option>
+  <option value="butterfly">Butterfly</option>
+  <option value="Crawl">Crawl</option>
+  <option value="Rygcrawl">Rygcrawl</option>
+</select>;`
+const disciplin = (document.querySelector("#filter-by-disciplin-top").value =selectedDisciplin);
+document.querySelector("#filter-by-disciplin-top").addEventListener("change", filterResultsTop);
+  for (const member of listOfMembers) {
+    if (selectedDisciplin === "" || member.disciplin === selectedDisciplin) {
+      showTopResult(member);
+    }
+  }
+}
+
+// shows the individual result
+function showTopResult(result) {
+  console.log("heeey");
+  getMemberName(result.uid).then((name) => {
+    const postHTML = /*html*/ ` <article class="grid-item">
+                <h1 class="resultName">${name}</h1>
+                <p class="resultTime"><b>Tid:</b> ${result.time}</p>
+         
+            </article>`;
+    document.querySelector("#top-five-dialog").insertAdjacentHTML("beforeend", postHTML);
+  });
+}
+async function filterResultsTop(event) {
+  selectedDisciplin = event.target.value;
+  const results = await getResults();
+showResultsTop(results);
 }
