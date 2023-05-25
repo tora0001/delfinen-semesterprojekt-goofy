@@ -8,7 +8,7 @@ let selectedDisciplin = "";
 
 function initApp() {
   console.log("running");
-  document.querySelector("#filter-by-disciplin").addEventListener("change", filterResults);
+  // document.querySelector("#filter-by-disciplin").addEventListener("change", filterResults);
   updatePostsGrid();
   document.querySelector(".new-result-btn").addEventListener("click", addResultClicked);
   document.querySelector(".open-top-btn").addEventListener("click", topButtonClicked);
@@ -81,10 +81,10 @@ function showResult(result) {
   });
 }
 
-function filterResults(event) {
-  selectedDisciplin = event.target.value;
-  updatePostsGrid();
-}
+// function filterResults(event) {
+//   selectedDisciplin = event.target.value;
+//   updatePostsGrid();
+// }
 
 // Prepares all the data for creating a new result
 async function prepareNewResult() {
@@ -212,8 +212,7 @@ async function deleteResult(id) {
   return response;
 }
 
-
-async function topButtonClicked(){
+async function topButtonClicked() {
   document.querySelector("#top-five-dialog").showModal();
   const results = await getResults();
   showResultsTop(results);
@@ -225,12 +224,12 @@ function showResultsTop(listOfMembers) {
   <select name="filter-by-disciplin-top" id="filter-by-disciplin-top">
   <option value="" selected>Alle discipliner</option>
   <option value="Brystsvømning">Brystsvømning</option>
-  <option value="butterfly">Butterfly</option>
+  <option value="Butterfly">Butterfly</option>
   <option value="Crawl">Crawl</option>
-  <option value="Rygcrawl">Rygcrawl</option>
-</select>;`
-const disciplin = (document.querySelector("#filter-by-disciplin-top").value =selectedDisciplin);
-document.querySelector("#filter-by-disciplin-top").addEventListener("change", filterResultsTop);
+  <option value="Ryg crawl">Ryg crawl</option>
+</select>;`;
+  const disciplin = (document.querySelector("#filter-by-disciplin-top").value = selectedDisciplin);
+  document.querySelector("#filter-by-disciplin-top").addEventListener("change", filterResultsTop);
   for (const member of listOfMembers) {
     if (selectedDisciplin === "" || member.disciplin === selectedDisciplin) {
       showTopResult(member);
@@ -253,5 +252,5 @@ function showTopResult(result) {
 async function filterResultsTop(event) {
   selectedDisciplin = event.target.value;
   const results = await getResults();
-showResultsTop(results);
+  showResultsTop(results);
 }
