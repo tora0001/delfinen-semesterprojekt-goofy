@@ -63,26 +63,20 @@ async function getMemberName(uid) {
 // shows the individual result
 async function showResult(result) {
   let name = await getMemberName(result.uid);
-    // const postHTML = /*html*/ ` <article class="grid-item">
-    //             <h1 class="resultName">${name}</h1>
-    //             <p class="resultTime"><b>Tid:</b> ${result.time}</p>
-    //             <p class="resultDate"><b>Dato:</b> ${result.date}</p>
-    //             <p class="resultDisciplin"><b>Disciplin:</b> ${result.disciplin}</p>
-    //             <p class="resultCompetition"><b>Stævne:</b> ${result.competition}</p>
-    //             <p class="resultPlacement"><b>Placering:</b> ${result.placement}</p>
-    //             <p class="resultTeam"><b>Hold:</b> ${result.team}</p>
-    //             <div class="results-btns">
-    //             <button class="delete-result">Slet Resultat</button>
-    //             </div>
-                
-    //         </article>`;
-
-
     const postHTML = /*html*/ ` <article class="grid-item">
-    <h1 class="resultName">${name}</h1>
-               <p class="resultTime"><b>Tid:</b> ${result.time}</p>
-               <button class="delete-result">Slet Resultat</button>
-    </article>`;
+                <h1 class="resultName">${name}</h1>
+                <p class="resultTime"><b>Tid:</b> ${result.time}</p>
+                <p class="resultDate"><b>Dato:</b> ${result.date}</p>
+                <p class="resultDisciplin"><b>Disciplin:</b> ${result.disciplin}</p>
+                <p class="resultCompetition"><b>Stævne:</b> ${result.competition}</p>
+                <p class="resultPlacement"><b>Placering:</b> ${result.placement}</p>
+                <p class="resultTeam"><b>Hold:</b> ${result.team}</p>
+                <div class="results-btns">
+                <button class="delete-result">Slet Resultat</button>
+                </div>
+                
+            </article>`;
+
     document.querySelector("#members").insertAdjacentHTML("beforeend", postHTML);
     document.querySelector("#members article:last-child .delete-result").addEventListener("click", () => deleteResultClicked(result));
   ;
