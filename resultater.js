@@ -5,6 +5,7 @@ window.addEventListener("load", initApp);
 const endpoint = "https://delfinen-36fde-default-rtdb.firebaseio.com/";
 
 let selectedDisciplin = "";
+let selectedTeam = "";
 
 function initApp() {
   console.log("running");
@@ -220,19 +221,31 @@ async function topButtonClicked(){
 }
 
 // goes through all of the results and displays them and also takes the filter into consideration
-function showResultsTop(listOfMembers) {
+async function showResultsTop(listOfMembers) {
   document.querySelector("#top-five-dialog").innerHTML = /*html*/ `      
   <select name="filter-by-disciplin-top" id="filter-by-disciplin-top">
   <option value="" selected>Alle discipliner</option>
   <option value="Brystsvømning">Brystsvømning</option>
-  <option value="butterfly">Butterfly</option>
+  <option value="Butterfly">Butterfly</option>
   <option value="Crawl">Crawl</option>
-  <option value="Rygcrawl">Rygcrawl</option>
-</select>;`
-const disciplin = (document.querySelector("#filter-by-disciplin-top").value =selectedDisciplin);
+  <option value="Ryg crawl">Ryg crawl</option>
+</select>;
+
+<select name="filter-by-age-top" id="filter-by-age-top">
+<option value="" selected>Alle hold</option>
+<option value="Junior">Junior</option>
+<option value="Senior">Senior</option>
+</select>;
+
+`
+const topDisciplin = (document.querySelector("#filter-by-disciplin-top").value =selectedDisciplin);
+const topTeam = (document.querySelector("#filter-by-age-top").value =selectedTeam);
+
 document.querySelector("#filter-by-disciplin-top").addEventListener("change", filterResultsTop);
+document.querySelector("#filter-by-age-top").addEventListener("change", filterResultsTopAge);
   for (const member of listOfMembers) {
-    if (selectedDisciplin === "" || member.disciplin === selectedDisciplin) {
+    if ((selectedDisciplin === "" || member.disciplin === selectedDisciplin) && 
+    (selectedTeam === "" || member.team === selectedTeam )) {
       showTopResult(member);
     }
   }
@@ -252,6 +265,11 @@ function showTopResult(result) {
 }
 async function filterResultsTop(event) {
   selectedDisciplin = event.target.value;
+  const results = await getResults();
+showResultsTop(results);
+}
+async function filterResultsTopAge(event) {
+  selectedTeam = event.target.value;
   const results = await getResults();
 showResultsTop(results);
 }
