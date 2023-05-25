@@ -25,8 +25,7 @@ async function updatePostsGrid() {
 function showResults(listOfMembers) {
   document.querySelector("#members").innerHTML = "";
   for (const member of listOfMembers) {
-      showResult(member);
-
+    showResult(member);
   }
 }
 
@@ -219,14 +218,9 @@ async function topButtonClicked() {
   showResultsTop(results);
 }
 
-
 // goes through all of the results and displays them and also takes the filter into consideration
 async function showResultsTop(listOfMembers) {
-  const filteredResults = listOfMembers.filter(
-    (member) =>
-      (selectedDisciplin === "" || member.disciplin === selectedDisciplin) &&
-      (selectedTeam === "" || member.team === selectedTeam)
-  );
+  const filteredResults = listOfMembers.filter((member) => (selectedDisciplin === "" || member.disciplin === selectedDisciplin) && (selectedTeam === "" || member.team === selectedTeam));
 
   const sortedResults = filteredResults.sort((a, b) => a.time - b.time);
 
@@ -240,13 +234,13 @@ async function showResultsTop(listOfMembers) {
       <option value="Butterfly">Butterfly</option>
       <option value="Crawl">Crawl</option>
       <option value="Ryg crawl">Ryg crawl</option>
-    </select>;
+    </select>
 
     <select name="filter-by-age-top" id="filter-by-age-top">
       <option value="" selected>Alle hold</option>
       <option value="Junior">Junior</option>
       <option value="Senior">Senior</option>
-    </select>;
+    </select>
   `;
 
   const topDisciplin = (document.querySelector("#filter-by-disciplin-top").value = selectedDisciplin);
@@ -255,11 +249,10 @@ async function showResultsTop(listOfMembers) {
   document.querySelector("#filter-by-disciplin-top").addEventListener("change", filterResultsTop);
   document.querySelector("#filter-by-age-top").addEventListener("change", filterResultsTopAge);
 
-topFiveIncludes = [];
+  topFiveIncludes = [];
 
   for (const member of sortedResults) {
-    if(!topFiveIncludes.includes(memberNames[member.uid]))
-    showTopResult(member, memberNames[member.uid]);
+    if (!topFiveIncludes.includes(memberNames[member.uid])) showTopResult(member, memberNames[member.uid]);
   }
 }
 
@@ -285,8 +278,7 @@ function showTopResult(result, name) {
     </article>
   `;
   document.querySelector("#top-five-dialog").insertAdjacentHTML("beforeend", postHTML);
-  topFiveIncludes.push(name)
-
+  topFiveIncludes.push(name);
 }
 
 async function filterResultsTop(event) {
@@ -296,12 +288,6 @@ async function filterResultsTop(event) {
 }
 async function filterResultsTopAge(event) {
   selectedTeam = event.target.value;
-    const results = await getResults();
+  const results = await getResults();
   showResultsTop(results);
 }
-
-
-
-
-
-

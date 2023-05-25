@@ -5,91 +5,199 @@ body {
 }
 
 h1 {
-  font-size: 24px;
+  font-size: 30px;
+}
+
+h2 {
+  font-size: 1.2em;
+}
+
+header {
+  background-color: #4267b2;
+  color: #fff;
+  padding: 20px;
+  border-bottom: solid 2px #f0f2f5;
 }
 
 nav {
-  background-color: #f1f1f1;
-}
-
-nav a {
-  display: inline-block;
-  padding: 10px;
-  text-decoration: none;
-  color: #333;
-}
-
-nav a.active {
-  background-color: #ddd;
-}
-
-/* Grid layout */
-#members {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-}
-
-.grid-item {
-  border: 1px solid #ddd;
+  background-color: #4267b2;
+  color: #fff;
   padding: 20px;
 }
 
-/* Form styling */
+nav a {
+  color: #fff;
+  text-decoration: none;
+  margin-right: 10px;
+}
+
+nav a.active {
+  font-weight: bold;
+}
+
+main {
+  padding-left: 20px;
+}
+
 form {
-  display: grid;
-  gap: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 label {
-  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
 }
 
 input[type="text"],
 select {
   width: 100%;
   padding: 5px;
+  margin-bottom: 10px;
 }
 
 button[type="submit"],
-input[type="button"] {
-  padding: 10px 20px;
-  background-color: #4caf50;
-  border: none;
+button[type="button"] {
+  padding: 5px 10px;
+  background-color: #4267b2;
   color: #fff;
+  border: none;
   cursor: pointer;
 }
 
-/* Modal styling */
+.add-member-btn {
+  padding-left: 20px;
+}
+
+#member-info {
+  padding: 20px;
+}
+
+.new-member-btn {
+  padding: 5px 10px;
+  background-color: #4267b2;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.add-result-btn {
+  padding-left: 20px;
+}
+
+.new-result-btn {
+  padding: 5px 10px;
+  background-color: #4267b2;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.topfive-btn {
+  padding-left: 20px;
+}
+
+.open-top-btn {
+  padding: 5px 10px;
+  background-color: #4267b2;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+ul#members {
+  list-style-type: none;
+  padding-left: 20px;
+  padding-right: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: 20px;
+}
+
+article.grid-item {
+  background-color: #f0f2f5;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 10px;
+}
+
 dialog {
-  display: none;
-  position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
+  padding: 20px;
+  border: solid 2px black;
+  border-radius: 5px;
+  background-color: #ffffff;
+  max-width: 500px;
+}
+
+dialog::backdrop {
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  padding: 20px;
-  overflow: auto;
 }
 
-dialog[open] {
-  display: block;
-}
-
-dialog form {
-  background-color: #fff;
-  padding: 20px;
+#btn-cancel {
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  background-color: grey;
+  color: #fff;
+  border: none;
+  cursor: pointer;
 }
 
 #closeModalButton {
-  background-color: #f44336;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  background-color: #4267b2;
+  color: #fff;
+  border: none;
+  cursor: pointer;
 }
 
-/* Active page highlighting */
-nav a.active {
-  background-color: #4caf50;
+.grid-item-top {
+  border: solid 2px black;
+  padding: 5px;
+  font-size: 0.9em;
+  max-height: 100px;
+}
+
+#search-input {
+  padding-left: 20px;
+}
+
+.memberName {
+  cursor: pointer;
+}
+
+#top-five-dialog {
+  padding: 50px;
+  font-size: 1em;
+}
+
+.delete-result {
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  background-color: grey;
   color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.delete {
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  background-color: grey;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.update {
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  background-color: #4267b2;
+  color: #fff;
+  border: none;
+  cursor: pointer;
 }
